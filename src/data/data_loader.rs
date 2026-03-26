@@ -50,7 +50,7 @@ impl Dataset<RideItem> for RideLoader {
 
 fn read_data(path: &str) -> Vec<Data> {
     let mut reader = csv::Reader::from_path(path).unwrap();
-    reader.headers().unwrap(); // Skip header row
+    reader.headers().unwrap(); 
     reader
         .deserialize()
         .collect::<Result<Vec<Data>, _>>()

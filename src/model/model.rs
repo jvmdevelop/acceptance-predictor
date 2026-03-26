@@ -7,7 +7,7 @@ use burn::{
 };
 
 #[derive(Config, Debug)]
-struct RideModelConfig {
+pub struct RideModelConfig {
     #[config(default = 3)]
     input_size: usize,
     #[config(default = 10)]
@@ -17,7 +17,7 @@ struct RideModelConfig {
 }
 
 impl RideModelConfig {
-    fn init<B: Backend>(&self, device: &B::Device) -> RideModel<B> {
+    pub fn init<B: Backend>(&self, device: &B::Device) -> RideModel<B> {
         RideModel {
             linear_1: LinearConfig::new(self.input_size, self.hidden_size).init(device),
             relu_1: Relu::new(),
@@ -27,7 +27,7 @@ impl RideModelConfig {
 }
 
 #[derive(Module, Debug)]
-struct RideModel<B: Backend> {
+pub struct RideModel<B: Backend> {
     linear_1: Linear<B>,
     relu_1: Relu,
     linear_2: Linear<B>,

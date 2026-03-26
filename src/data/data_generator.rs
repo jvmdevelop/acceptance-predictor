@@ -29,6 +29,10 @@ impl ToArray for Data {
 pub fn write(data: Vec<Data>) {
     let file = File::create("data/data.csv").expect("Unable to create file");
     let mut wtr = csv::Writer::from_writer(file);
+    
+    wtr.write_record(&["distance", "price", "user_rating", "accepted"])
+        .expect("Unable to write header");
+    
     for d in data {
         wtr.write_record(d.to_array())
             .expect("Unable to write data");
@@ -62,4 +66,10 @@ pub fn generate_data(size: usize) -> Vec<Data> {
 pub fn write_and_generate_data(size: usize) {
     let data = generate_data(size);
     write(data);
+}
+
+pub fn ensure_data_exists(size: usize) {
+    if !std::path::Path::new("data/data.csv").exists() {
+        write_and_generate_data(size);
+    }
 }

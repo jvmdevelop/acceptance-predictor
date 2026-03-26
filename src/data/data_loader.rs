@@ -6,6 +6,7 @@ use burn::{
 
 use super::data_generator::Data;
 
+#[derive(Debug, Clone)]
 pub struct RideLoader {
     data: Vec<Data>,
 }
@@ -17,6 +18,7 @@ impl RideLoader {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct RideItem {
     pub features: Tensor<NdArray, 1>,
     pub target: Tensor<NdArray, 1>,
@@ -48,6 +50,7 @@ impl Dataset<RideItem> for RideLoader {
 
 fn read_data(path: &str) -> Vec<Data> {
     let mut reader = csv::Reader::from_path(path).unwrap();
+    reader.headers().unwrap(); // Skip header row
     reader
         .deserialize()
         .collect::<Result<Vec<Data>, _>>()

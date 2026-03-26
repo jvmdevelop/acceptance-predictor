@@ -3,7 +3,7 @@ use burn::{
     module::Module,
     nn::{Linear, LinearConfig, Relu},
     prelude::Backend,
-    tensor::{Device, Tensor},
+    tensor::{Device, Tensor, activation::sigmoid},
 };
 
 #[derive(Config, Debug)]
@@ -38,6 +38,6 @@ impl<B: Backend> RideModel<B> {
         let x = self.linear_1.forward(x);
         let x = self.relu_1.forward(x);
         let x = self.linear_2.forward(x);
-        x
+        sigmoid(x)
     }
 }

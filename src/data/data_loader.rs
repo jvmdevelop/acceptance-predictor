@@ -1,7 +1,6 @@
 use burn::{
     backend::{NdArray, ndarray::NdArrayDevice},
     data::dataset::Dataset,
-    tensor::Tensor,
 };
 
 use super::data_generator::Data;
@@ -20,37 +19,30 @@ impl RideLoader {
 
 #[derive(Debug, Clone)]
 pub struct RideItem {
-    pub features: Tensor<NdArray, 1>,
-    pub target: Tensor<NdArray, 1>,
+    pub features: Vec<f32>,
+    pub target: f32,
 }
 
 impl Dataset<RideItem> for RideLoader {
     fn len(&self) -> usize {
         self.data.len()
     }
-
     fn get(&self, index: usize) -> Option<RideItem> {
         let data = self.data.get(index)?;
-
-        let device = &NdArrayDevice::Cpu;
-
         Some(RideItem {
-            features: Tensor::from_floats(
-                [
-                    data.distance / 50.0,
-                    data.price / 1000.0,
-                    (data.user_rating - 1.0) / 4.0,
-                ],
-                device,
-            ),
-            target: Tensor::from_floats([data.accepted as f32], device),
+            features: vec![
+                data.distance / 50.0,
+                data.price / 1000.0,
+                (data.user_rating - 1.0) / 4.0,
+            ],
+            target: data.accepted as f32,
         })
     }
 }
 
 fn read_data(path: &str) -> Vec<Data> {
     let mut reader = csv::Reader::from_path(path).unwrap();
-    reader.headers().unwrap(); 
+    reader.headers().unwrap();
     reader
         .deserialize()
         .collect::<Result<Vec<Data>, _>>()
